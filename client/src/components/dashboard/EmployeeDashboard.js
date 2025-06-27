@@ -122,11 +122,14 @@ const EmployeeDashboard = () => {
               />
               <Card.Title>My Projects</Card.Title>
               <Card.Text className="display-4">
-                {projects?.filter(
-                  (project) =>
-                    project.manager._id === user?._id ||
-                    project.teamMembers.some((member) => member._id === user?._id)
-                ).length || 0}
+                {Array.isArray(projects)
+                ? projects.filter(
+                    (project) =>
+                      project.manager._id === user?._id ||
+                      project.teamMembers.some((member) => member._id === user?._id)
+                  ).length
+                : 0}
+
               </Card.Text>
             </Card.Body>
           </Card>
@@ -141,7 +144,8 @@ const EmployeeDashboard = () => {
               />
               <Card.Title>My Tasks</Card.Title>
               <Card.Text className="display-4">
-                {tasks?.filter((task) => task.assignedTo._id === user?._id).length || 0}
+                {Array.isArray(tasks) ? tasks.filter((task) => task.assignedTo._id === user?._id).length : 0}
+
               </Card.Text>
             </Card.Body>
           </Card>
