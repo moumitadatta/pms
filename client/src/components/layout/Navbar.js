@@ -23,12 +23,15 @@ const AppNavbar = () => {
       <Nav.Link as={Link} to="/tasks">
         Tasks
       </Nav.Link>
-      <Nav.Item className="d-flex align-items-center ms-3">
-          <span className="text-white me-2">Hi, {user?.name?.split(' ')[0]}</span>
-        <Button variant="outline-light" size="sm" onClick={onLogout}>
-          Logout
-        </Button>
-      </Nav.Item>
+     {isAuthenticated && user && (
+        <Nav.Item className="d-flex align-items-center ms-3">
+          <span className="text-white me-2">Hi, {user.name.split(' ')[0]}</span>
+          <Button variant="outline-light" size="sm" onClick={onLogout}>
+            Logout
+          </Button>
+        </Nav.Item>
+      )}
+
     </>
   );
 
