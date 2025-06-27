@@ -36,7 +36,10 @@ app.use(cookieParser());
 
 // CORS configuration
 const corsOptions = {
-  origin: 'http://localhost:5000', // 🛑 only the client you're using
+  origin: [
+    'http://localhost:3000', // local dev frontend
+    'https://pms-client-oyd9.onrender.com' // deployed frontend on Render
+  ],
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: ['Content-Type', 'Authorization']
