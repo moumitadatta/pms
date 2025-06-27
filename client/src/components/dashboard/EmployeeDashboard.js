@@ -68,39 +68,44 @@ const EmployeeDashboard = () => {
     return statusMap[status] || statusMap.default;
   };
 
-  const myProjects = projects
-    ?.filter(
-      (project) =>
-        project.manager._id === user?._id ||
-        project.teamMembers.some((member) => member._id === user?._id)
-    )
-    ?.slice(0, 3)
-    ?.map((project) => (
-      <ListGroup.Item
-        key={project._id}
-        className="d-flex justify-content-between align-items-center"
-      >
-        {project.name}
-        <Badge variant={getStatusBadge(project.status)}>
-          {project.status}
-        </Badge>
-      </ListGroup.Item>
-    ));
+  const myProjects = Array.isArray(projects)
+  ? projects
+      .filter(
+        (project) =>
+          project.manager._id === user?._id ||
+          project.teamMembers.some((member) => member._id === user?._id)
+      )
+      .slice(0, 3)
+      .map((project) => (
+        <ListGroup.Item
+          key={project._id}
+          className="d-flex justify-content-between align-items-center"
+        >
+          {project.name}
+          <Badge bg={getStatusBadge(project.status)}>
+            {project.status}
+          </Badge>
+        </ListGroup.Item>
+      ))
+  : [];
 
-  const myTasks = tasks
-    ?.filter((task) => task.assignedTo._id === user?._id)
-    ?.slice(0, 5)
-    ?.map((task) => (
-      <ListGroup.Item
-        key={task._id}
-        className="d-flex justify-content-between align-items-center"
-      >
-        {task.title}
-        <Badge variant={getStatusBadge(task.status)}>
-          {task.status}
-        </Badge>
-      </ListGroup.Item>
-    ));
+ const myTasks = Array.isArray(tasks)
+  ? tasks
+      .filter((task) => task.assignedTo._id === user?._id)
+      .slice(0, 5)
+      .map((task) => (
+        <ListGroup.Item
+          key={task._id}
+          className="d-flex justify-content-between align-items-center"
+        >
+          {task.title}
+          <Badge bg={getStatusBadge(task.status)}>
+            {task.status}
+          </Badge>
+        </ListGroup.Item>
+      ))
+  : [];
+
 
   return (
     <div className="dashboard">
