@@ -90,34 +90,34 @@ export const login = (email, password, navigate) => async (dispatch) => {
   const body = { email, password };
 
   try {
-    // Dispatch loading state
     dispatch({ type: LOGIN_REQUEST });
-    
+
     const res = await api.post('/auth/login', body);
+
+    // Save token
+    localStorage.setItem('token', res.data.token);
+    setAuthToken(res.data.token);
+
+    // ✅ Now load the user
+    const userRes = await api.get('/auth/me');
 
     dispatch({
       type: LOGIN_SUCCESS,
       payload: {
-      token: res.data.token,
-      user: res.data.data  // assuming `data` is the user object
-    },
+        token: res.data.token,
+        user: userRes.data.data,
+      },
     });
 
-    // Set the token in localStorage and axios headers
-    localStorage.setItem('token', res.data.token);
-    setAuthToken(res.data.token);
-
-    // Load user data
-    const userRes = await api.get('/auth/me');
     dispatch({
       type: USER_LOADED,
       payload: userRes.data.data,
     });
 
-    // Only navigate after everything is complete
     if (navigate) {
       navigate('/dashboard');
     }
+
   } catch (err) {
     const errors = err.response?.data?.errors || [];
 
@@ -132,6 +132,7 @@ export const login = (email, password, navigate) => async (dispatch) => {
     });
   }
 };
+
 
 // Logout / Clear Profile
 export const logout = () => (dispatch) => {
