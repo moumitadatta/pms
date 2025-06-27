@@ -24,6 +24,7 @@ const AppNavbar = () => {
         Tasks
       </Nav.Link>
 
+    { user?.name && (
   <Nav.Item className="d-flex align-items-center ms-3">
     <span className="text-white me-2">
       Hi, {(user.name && user.name.split(' ')[0]) || 'User'}
@@ -32,6 +33,7 @@ const AppNavbar = () => {
       Logout
     </Button>
   </Nav.Item>
+)}
 
 
 
