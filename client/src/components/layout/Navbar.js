@@ -24,17 +24,21 @@ const AppNavbar = () => {
         Tasks
       </Nav.Link>
 
-    { user?.name && (
-  <Nav.Item className="d-flex align-items-center ms-3">
-    <span className="text-white me-2">
-      Hi, {(user.name && user.name.split(' ')[0]) || 'User'}
-    </span>
-    <Button variant="outline-light" size="sm" onClick={onLogout}>
-      Logout
-    </Button>
-  </Nav.Item>
-)}
+   {/* Conditionally show greeting */}
+    {user?.name && (
+      <Nav.Item className="d-flex align-items-center ms-3">
+        <span className="text-white me-2">
+          Hi, {user.name.split(' ')[0]}
+        </span>
+      </Nav.Item>
+    )}
 
+    {/* Always show Logout for authenticated users */}
+    <Nav.Item className="d-flex align-items-center ms-3">
+      <Button variant="outline-light" size="sm" onClick={onLogout}>
+        Logout
+      </Button>
+    </Nav.Item>
 
 
     </>
