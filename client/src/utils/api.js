@@ -3,8 +3,8 @@ import axios from 'axios';
 
 
 const api = axios.create({
-  baseURL: 'http://localhost:5005/api/v1', // ✅ Match your backend
-  withCredentials: true, // Crucial for cookies
+  baseURL: process.env.REACT_APP_API_URL + '/api/v1',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
