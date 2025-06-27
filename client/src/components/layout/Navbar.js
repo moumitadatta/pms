@@ -23,7 +23,7 @@ const AppNavbar = () => {
       <Nav.Link as={Link} to="/tasks">
         Tasks
       </Nav.Link>
-   {isAuthenticated && user?.name && (
+   {user?.name && (
   <Nav.Item className="d-flex align-items-center ms-3">
     <span className="text-white me-2">
       Hi, {(user.name && user.name.split(' ')[0]) || 'User'}
