@@ -2,8 +2,14 @@
 import axios from 'axios';
 
 
+const baseURL = process.env.REACT_APP_API_URL;
+
+if (!baseURL) {
+  console.warn("🚨 REACT_APP_API_URL is not defined. Check .env.production or .env file.");
+}
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL + '/api/v1',
+  baseURL: baseURL + '/api/v1',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

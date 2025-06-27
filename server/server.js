@@ -35,17 +35,24 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // CORS configuration
-const corsOptions = {
-  origin: [
-    'http://localhost:3000', // local dev frontend
-    'https://pms-client-oyd9.onrender.com' // deployed frontend on Render
-  ],
-  credentials: true,
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://pms-client-oyd9.onrender.com'
+];
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed: ' + origin));
+    }
+  },
+  credentials: true
+}));
+
+
+
 
 
 // Add this after CORS but before routes
