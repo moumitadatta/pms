@@ -32,29 +32,31 @@ exports.register = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/auth/login
 // @access  Public
 // controllers/authController.js
-const generateToken = require('../utils/generateToken');
-
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    // Validate input
     if (!email || !password) {
       return next(new ErrorResponse('Please provide email and password', 400));
     }
 
+    // Check if user exists
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return next(new ErrorResponse('Invalid credentials', 401));
     }
 
+    // Check password
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return next(new ErrorResponse('Invalid credentials', 401));
     }
 
-    // Use the generateToken helper instead of user.getSignedJwtToken()
-    const token = generateToken(user._id);
+    // Generate token
+    const token = user.getSignedJwtToken();
 
+    // Set cookie (optional)
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -62,6 +64,7 @@ exports.login = async (req, res, next) => {
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
+    // Send response
     res.status(200).json({
       success: true,
       token,
@@ -78,7 +81,6 @@ exports.login = async (req, res, next) => {
     next(new ErrorResponse('Server error', 500));
   }
 };
-
 
 // @desc    Get current logged in user
 // @route   GET /api/v1/auth/me
@@ -209,18 +211,18 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
-  res.status(statusCode)
-  .cookie('token', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'None',
-    maxAge: Number(process.env.JWT_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
-  })
-  .json({
-    success: true,
-    message: 'Logged in successfully' // ✅ better than exposing token
-  });
-
+  res
+    .status(statusCode)
+    .cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Required for HTTPS (Render)
+      sameSite: 'None', // Important for cross-origin cookies (React + Render)
+      maxAge: Number(process.env.JWT_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000 // Safer fallback
+    })
+    .json({
+      success: true,
+      token
+    });
 };
 
 
