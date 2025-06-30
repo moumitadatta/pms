@@ -24,8 +24,7 @@ const AppNavbar = () => {
         Tasks
       </Nav.Link>
 
-
-   {/* Conditionally show greeting */}
+    {/* Conditionally show greeting */}
     {user?.name && (
       <Nav.Item className="d-flex align-items-center ms-3">
         <span className="text-white me-2">
@@ -34,12 +33,16 @@ const AppNavbar = () => {
       </Nav.Item>
     )}
 
+
     {/* Always show Logout for authenticated users */}
     <Nav.Item className="d-flex align-items-center ms-3">
       <Button variant="outline-light" size="sm" onClick={onLogout}>
         Logout
       </Button>
     </Nav.Item>
+  
+
+   
 
     </>
   );
