@@ -24,6 +24,7 @@ const AppNavbar = () => {
         Tasks
       </Nav.Link>
 
+
    {/* Conditionally show greeting */}
     {user?.name && (
       <Nav.Item className="d-flex align-items-center ms-3">
@@ -39,7 +40,6 @@ const AppNavbar = () => {
         Logout
       </Button>
     </Nav.Item>
-
 
     </>
   );
