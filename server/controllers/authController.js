@@ -57,12 +57,12 @@ exports.login = async (req, res, next) => {
     const token = user.getSignedJwtToken();
 
     // Set cookie (optional)
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
-    });
+   res.cookie('token', token, {
+  expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+});
+
 
     // Send response
     res.status(200).json({

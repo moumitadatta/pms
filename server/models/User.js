@@ -52,7 +52,7 @@ const UserSchema = new mongoose.Schema({
 // ✅ Add this method to generate JWT token
 UserSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+   expiresIn: process.env.JWT_EXPIRE || '1h' // ✅ This is correct
   });
 };
 
