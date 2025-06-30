@@ -209,18 +209,18 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
-  res
-    .status(statusCode)
-    .cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Required for HTTPS (Render)
-      sameSite: 'None', // Important for cross-origin cookies (React + Render)
-      maxAge: Number(process.env.JWT_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000 // Safer fallback
-    })
-    .json({
-      success: true,
-      token
-    });
+  res.status(statusCode)
+  .cookie('token', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'None',
+    maxAge: Number(process.env.JWT_COOKIE_EXPIRE || 7) * 24 * 60 * 60 * 1000
+  })
+  .json({
+    success: true,
+    message: 'Logged in successfully' // ✅ better than exposing token
+  });
+
 };
 
 

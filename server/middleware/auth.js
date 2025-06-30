@@ -3,6 +3,9 @@ const User = require('../models/User');
 const ErrorResponse = require('../utils/errorResponse');
 
 exports.protect = async (req, res, next) => {
+   // 🔍 Debug Logs
+  console.log('🧁 Cookies:', req.cookies);
+  console.log('🛂 Authorization Header:', req.headers.authorization);
   let token;
 
   // Check multiple token sources
