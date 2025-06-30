@@ -36,20 +36,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // CORS configuration
+const cors = require('cors');
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173', 
-    'https://your-production-frontend-url.com'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'X-Requested-With',
-    'Accept'
-  ]
+  origin: 'https://pms-client-oyd9.onrender.com', // ✅ your frontend URL on Render
+  credentials: true, // ✅ allow cookies
 }));
+
 
 // Add this after CORS but before routes
 
