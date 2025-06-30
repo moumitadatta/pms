@@ -68,8 +68,13 @@ UserSchema.pre('save', async function (next) {
 });
 
 // Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+// models/User.js
+userSchema.methods.matchPassword = async function(enteredPassword) {
+  try {
+    return await bcrypt.compare(enteredPassword, this.password);
+  } catch (err) {
+    console.error('Password comparison error:', err);
+    throw new Error('Password comparison failed');
+  }
 };
-
 module.exports = mongoose.model('User', UserSchema);

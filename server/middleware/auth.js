@@ -5,32 +5,37 @@ const ErrorResponse = require('../utils/errorResponse');
 exports.protect = async (req, res, next) => {
   let token;
 
-  // Extract token from Authorization header
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
+  // Check multiple token sources
+  if (req.headers.authorization?.startsWith('Bearer')) {
     token = req.headers.authorization.split(' ')[1];
+  } else if (req.cookies?.token) {
+    token = req.cookies.token;
   }
 
-  // 🛑 Token not found
   if (!token) {
-    return next(new ErrorResponse('Not authorized to access this route - token missing', 401));
+    console.error('No token found in headers or cookies');
+    return next(new ErrorResponse('Not authorized', 401));
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("✅ Decoded token:", decoded); // <-- Add this
+    
+    // Check token expiration manually
+    const now = Date.now().valueOf() / 1000;
+    if (typeof decoded.exp !== 'undefined' && decoded.exp < now) {
+      throw new Error('Token expired');
+    }
 
-    req.user = await User.findById(decoded.id).select('-password'); // Always exclude password
+    req.user = await User.findById(decoded.id).select('-password');
+    
     if (!req.user) {
-      return next(new ErrorResponse('User not found with this token', 404));
+      throw new Error('User not found');
     }
 
     next();
   } catch (err) {
-    console.error("❌ JWT verification failed:", err.message);
-    return next(new ErrorResponse('Not authorized to access this route - invalid token', 401));
+    console.error(`JWT Error: ${err.message}`);
+    return next(new ErrorResponse('Not authorized', 401));
   }
 };
 

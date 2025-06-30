@@ -18,13 +18,13 @@ const mongoUri = "mongodb+srv://moudattain2024:moumita12345@moutech.ktlrj.mongod
 connectDB(mongoUri);
 // Route files
 const auth = require('./routes/authRoutes');
-const projects = require('./routes/projectRoutes');
-const tasks = require('./routes/taskRoutes');
-const attendance = require('./routes/attendanceRoutes');
-const leaves = require('./routes/leaveRoutes');
-const holidays = require('./routes/holidayRoutes');
-const timesheets = require('./routes/timesheetRoutes');
-const tickets = require('./routes/ticketRoutes');
+// const projects = require('./routes/projectRoutes');
+// const tasks = require('./routes/taskRoutes');
+// const attendance = require('./routes/attendanceRoutes');
+// const leaves = require('./routes/leaveRoutes');
+// const holidays = require('./routes/holidayRoutes');
+// const timesheets = require('./routes/timesheetRoutes');
+// const tickets = require('./routes/ticketRoutes');
 
 const app = express();
 
@@ -35,25 +35,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // CORS configuration
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://pms-client-oyd9.onrender.com'
-];
-
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('CORS not allowed: ' + origin));
-    }
-  },
-  credentials: true
+  origin: [
+    'http://localhost:5173', 
+    'https://your-production-frontend-url.com'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With',
+    'Accept'
+  ]
 }));
-
-
-
-
 
 // Add this after CORS but before routes
 
