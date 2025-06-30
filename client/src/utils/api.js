@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 
-const baseURL = process.env.REACT_APP_API_URL;
+const baseURL = process.env.REACT_APP_API_URL || "https://pms-server-ygbl.onrender.com";
 
 if (!baseURL) {
   console.warn("🚨 REACT_APP_API_URL is not defined. Check .env.production or .env file.");
@@ -10,12 +10,13 @@ if (!baseURL) {
 
 const api = axios.create({
   baseURL: baseURL + '/api/v1',
-  withCredentials: true,
+  withCredentials: true, // ✅ important for cookies
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   }
 });
+
 
 // Request interceptor for auth tokens
 api.interceptors.request.use(
