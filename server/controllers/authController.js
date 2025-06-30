@@ -3,6 +3,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
+const generateToken = require('../utils/generateToken');
 
 // @desc    Register user
 // @route   POST /api/v1/auth/register
@@ -31,31 +32,29 @@ exports.register = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/auth/login
 // @access  Public
 // controllers/authController.js
+const generateToken = require('../utils/generateToken');
+
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
     if (!email || !password) {
       return next(new ErrorResponse('Please provide email and password', 400));
     }
 
-    // Check if user exists
     const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return next(new ErrorResponse('Invalid credentials', 401));
     }
 
-    // Check password
     const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return next(new ErrorResponse('Invalid credentials', 401));
     }
 
-    // Generate token
-    const token = user.getSignedJwtToken();
+    // Use the generateToken helper instead of user.getSignedJwtToken()
+    const token = generateToken(user._id);
 
-    // Set cookie (optional)
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -63,7 +62,6 @@ exports.login = async (req, res, next) => {
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
-    // Send response
     res.status(200).json({
       success: true,
       token,
@@ -80,6 +78,7 @@ exports.login = async (req, res, next) => {
     next(new ErrorResponse('Server error', 500));
   }
 };
+
 
 // @desc    Get current logged in user
 // @route   GET /api/v1/auth/me
